@@ -18,3 +18,4 @@ model_scorecard.csv
 venv/
 .env
 .DS_Store
+.venv/
