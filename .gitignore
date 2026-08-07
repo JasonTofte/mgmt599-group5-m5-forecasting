@@ -1,0 +1,20 @@
+# Raw M5 data — 400+ MB, download from Kaggle instead
+*.csv
+*.parquet
+data/
+m5-forecasting-accuracy/
+
+# Notebook artifacts
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+
+# Local model output (regenerate by running the notebook)
+forecast_vs_actual.parquet
+model_scorecard.csv
+
+# Environment
+.venv/
+venv/
+.env
+.DS_Store
