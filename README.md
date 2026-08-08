@@ -46,7 +46,8 @@ point the upload script at the folder.
 |---|---|---|
 | Ingestion | CLI upload to S3 | Same (manual) |
 | Storage | S3 — raw / processed / curated zones | Cloud Storage |
-| Transformation | AWS Glue (Spark) + Glue Data Catalog | Dataflow |
+| Transformation | Local pandas transform + Athena CTAS (Glue Spark job as optional evidence) | Dataflow |
+| Catalog | Glue crawler + Glue Data Catalog | Dataproc Metastore |
 | Query & analytics | Athena + Jupyter notebook | BigQuery |
 | Output | QuickSight dashboard | Looker Studio |
 
@@ -71,10 +72,24 @@ python scripts/transform_local.py \
     --stores CA_1
 ```
 
-**3. Run the transform at scale in Glue.** Create a Spark job from
-`scripts/glue_job.py` with worker type G.1X, 3 workers, and job parameters
-`--S3_BUCKET` and `--SALES_FILE`. The job validates the row count before writing
-and fails loudly rather than producing bad output.
+**3. Run the full transform locally and upload.** Repeat step 2 with
+`--by-store` instead of `--stores CA_1` to process all ten stores, then upload:
+
+```bash
+aws s3 cp ./data/processed s3://<bucket>/processed/sales_long/ --recursive
+```
+
+The transform runs locally rather than in Glue because it is a wide-to-long melt
+of a 120 MB CSV — a workload a laptop finishes in about a minute. Glue's setup
+cost is the same regardless of data size and it is the highest-failure-rate step
+in the build, so keeping it off the critical path removes the risk without
+removing the layer.
+
+**3b. (Optional) Run the same transform in Glue as evidence.** Create a Spark job
+from `scripts/glue_job.py` with worker type G.1X, 3 workers, and job parameters
+`--S3_BUCKET` and `--SALES_FILE`. It writes to `processed/sales_long_glue/`, a
+separate prefix, so a failed run cannot damage the working data. Nothing
+downstream depends on this step.
 
 **4. Catalog the output.** Point a Glue crawler at
 `s3://<bucket>/processed/sales_long/` targeting database `m5_db`. Confirm
@@ -128,10 +143,14 @@ partitioned by `state_id`.
 - **Price join:** `(store_id, item_id, wm_yr_wk)`, LEFT — nulls are real signal,
   meaning the item was not yet carried in that store
 
-Partitioning is by state only, deliberately. Most queries filter to one state, so
-a state filter skips roughly two thirds of the data. With under a gigabyte of
-Parquet total, adding a year partition would create small-file overhead costing
-more than it saves.
+Partitioning is by state only, deliberately — and worth stating accurately.
+Most of our analytical queries aggregate across all three states, so partition
+pruning is not the main saving at this data size. The Athena cost reduction comes
+primarily from columnar projection plus Snappy compression: a query reading four
+of the sixteen columns scans only those four. Partitioning helps the
+state-filtered queries and demonstrates the technique correctly. With under a
+gigabyte of Parquet total, a second partition level would create small-file
+overhead costing more than it saves.
 
 Curated tables (`daily_sales_agg`, `weekly_item_agg`, `forecast_vs_actual`) exist
 so the dashboard never scans the 59M-row fact table.
@@ -172,7 +191,7 @@ Total project cost: under $10.
 
 - $10 AWS budget alert set before any resource was created
 - Parquet + Snappy compression, cutting Athena scan volume by roughly 90%
-- Partitioning so single-state queries skip two thirds of the data
+- Partitioning so state-filtered queries skip roughly two thirds of the data
 - Curated aggregates so the dashboard never touches the fact table
 - Notebook run locally rather than on a billed SageMaker instance
 

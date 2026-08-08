@@ -24,7 +24,7 @@ GLUE JOB SETUP (console -> ETL jobs -> Script editor -> Spark):
 EXPECTED OUTPUT
   59,181,090 rows total (30,490 series x 1,941 days)
   CA 23,672,436 | TX 17,754,327 | WI 17,754,327
-  Written to s3://<bucket>/processed/sales_long/ as Snappy Parquet,
+  Written to s3://<bucket>/processed/sales_long_glue/ as Snappy Parquet,
   partitioned by state_id.
 """
 
@@ -45,7 +45,11 @@ BUCKET = args["S3_BUCKET"]
 SALES_FILE = args["SALES_FILE"]
 
 RAW = f"s3://{BUCKET}/raw"
-PROCESSED = f"s3://{BUCKET}/processed/sales_long"
+# Deliberately a SEPARATE prefix from processed/sales_long/, which holds the
+# local transform's output that the crawler, Athena and the notebook all read.
+# This job writes with mode("overwrite"), so pointing it at sales_long/ would
+# destroy the working data on any run — including a partial or failed one.
+PROCESSED = f"s3://{BUCKET}/processed/sales_long_glue"
 
 sc = SparkContext()
 glueContext = GlueContext(sc)
@@ -219,5 +223,7 @@ log(f"writing to {PROCESSED}")
     .parquet(PROCESSED)
 )
 
-log("done — now run the Glue crawler against processed/sales_long/")
+log("done — output is in processed/sales_long_glue/. This job is evidence "
+    "of the Glue transformation layer; the crawler and all downstream "
+    "queries run against processed/sales_long/ from the local transform.")
 job.commit()
