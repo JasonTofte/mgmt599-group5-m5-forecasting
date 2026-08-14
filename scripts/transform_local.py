@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-transform_local.py — M5 wide-to-long transform, run locally.
+transform_local.py: M5 wide-to-long transform, run locally.
 
 MGMT 599 Group 5. This is the prototype for the Glue job. Prove the logic here
 on one store first, then port to Spark (see glue_job.py).
@@ -244,14 +244,14 @@ def validate(df, n_series, n_days):
 
     hard_fails = out[(~out["passed"]) & (out["expected"] != "informational")]
     if not hard_fails.empty:
-        log("!!! HARD VALIDATION FAILURE — do not upload this output !!!")
+        log("!!! HARD VALIDATION FAILURE: do not upload this output !!!")
         sys.exit(1)
 
     return out
 
 
 def write_parquet(df, out_dir):
-    """Partitioned by state_id, Snappy compressed — matches the Glue output."""
+    """Partitioned by state_id, Snappy compressed, matching the Glue output."""
     os.makedirs(out_dir, exist_ok=True)
     df.to_parquet(
         out_dir,

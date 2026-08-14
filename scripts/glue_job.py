@@ -1,9 +1,9 @@
 """
-glue_job.py — M5 wide-to-long transform, AWS Glue (Spark) version.
+glue_job.py: M5 wide-to-long transform, AWS Glue (Spark) version.
 
 MGMT 599 Group 5. This is transform_local.py ported to PySpark. Do NOT edit this
-file until the local prototype is proven — Glue cold-starts take 2-3 minutes per
-run, so debugging here costs ~5 minutes per typo.
+file until the local prototype is proven, since Glue cold starts take 2-3
+minutes per run and debugging here costs about 5 minutes per typo.
 
 GLUE JOB SETUP (console -> ETL jobs -> Script editor -> Spark):
   Type            : Spark
@@ -48,7 +48,7 @@ RAW = f"s3://{BUCKET}/raw"
 # Deliberately a SEPARATE prefix from processed/sales_long/, which holds the
 # local transform's output that the crawler, Athena and the notebook all read.
 # This job writes with mode("overwrite"), so pointing it at sales_long/ would
-# destroy the working data on any run — including a partial or failed one.
+# destroy the working data on any run, including a partial or failed one.
 PROCESSED = f"s3://{BUCKET}/processed/sales_long_glue"
 
 sc = SparkContext()
@@ -223,7 +223,7 @@ log(f"writing to {PROCESSED}")
     .parquet(PROCESSED)
 )
 
-log("done — output is in processed/sales_long_glue/. This job is evidence "
+log("done. Output is in processed/sales_long_glue/. This job is evidence "
     "of the Glue transformation layer; the crawler and all downstream "
     "queries run against processed/sales_long/ from the local transform.")
 job.commit()

@@ -1,6 +1,6 @@
 -- ============================================================================
 -- 05_event_day_effect.sql
--- Q4 — Do holidays and events move demand? (Second candidate model feature.)
+-- Q4: Do holidays and events move demand? (Second candidate model feature.)
 -- ============================================================================
 
 -- Overall: event days vs normal days, by category
@@ -15,7 +15,7 @@ ORDER BY cat_id, has_event;
 
 
 -- ---------------------------------------------------------------------------
--- By event TYPE — the aggregate above hides that different event types push
+-- By event TYPE. The aggregate above hides that different event types push
 -- demand in opposite directions
 -- ---------------------------------------------------------------------------
 SELECT
@@ -55,7 +55,7 @@ ORDER BY pct_vs_normal DESC;
 
 
 -- ---------------------------------------------------------------------------
--- Day-of-week seasonality — almost certainly the strongest single pattern in
+-- Day-of-week seasonality, almost certainly the strongest single pattern in
 -- the data, and the reason a seasonal naive baseline is hard to beat
 -- ---------------------------------------------------------------------------
 SELECT

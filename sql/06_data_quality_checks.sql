@@ -1,6 +1,6 @@
 -- ============================================================================
 -- 06_data_quality_checks.sql
--- Q5/Q6 — Data quality findings. Both rubrics ask for this explicitly.
+-- Q5/Q6: Data quality findings. Both rubrics ask for this explicitly.
 -- ============================================================================
 -- The point is not to show the data is clean. It is to show we looked, found
 -- specific characteristics, and understood what they mean for the model.
@@ -44,7 +44,7 @@ ORDER BY year;
 
 -- ---------------------------------------------------------------------------
 -- 3. Item lifecycle: leading zeros before an item's first real sale.
---    Confirms the interpretation above — items enter the catalogue over time.
+--    Confirms the interpretation above: items enter the catalogue over time.
 -- ---------------------------------------------------------------------------
 WITH first_sale AS (
     SELECT

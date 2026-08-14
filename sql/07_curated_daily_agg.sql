@@ -54,7 +54,7 @@ SELECT COUNT(*) AS agg_rows FROM m5_db.daily_sales_agg;
 
 
 -- ---------------------------------------------------------------------------
--- Item-level weekly rollup — for the model, not the dashboard.
+-- Item-level weekly rollup, for the model, not the dashboard.
 -- Weekly grain reduces the zero-inflation problem substantially, which makes
 -- the regression better behaved.
 -- ---------------------------------------------------------------------------

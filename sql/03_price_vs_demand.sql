@@ -1,10 +1,10 @@
 -- ============================================================================
 -- 03_price_vs_demand.sql
--- Q2 — Does price actually move demand? (i.e. does sell_price earn a spot
+-- Q2: Does price actually move demand? (i.e. does sell_price earn a spot
 --      in the regression model?)
 -- ============================================================================
 -- Method: within each item, bucket its observed prices into deciles, then
--- compare average daily units across buckets. Doing this WITHIN item matters —
+-- compare average daily units across buckets. Doing this WITHIN item matters,
 -- comparing raw price to units across all items would just tell us cheap
 -- categories sell more, which is not the same question.
 -- ============================================================================
@@ -35,7 +35,7 @@ ORDER BY price_decile;
 
 
 -- ---------------------------------------------------------------------------
--- Single-item deep dive — good for a slide, easier to explain than deciles
+-- Single-item deep dive, good for a slide, easier to explain than deciles
 -- Swap the item_id for whatever came out top of query 02.
 -- ---------------------------------------------------------------------------
 SELECT

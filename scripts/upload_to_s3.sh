@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ============================================================================
-# upload_to_s3.sh — one-time ingestion of the M5 CSVs into the raw zone
+# upload_to_s3.sh: one-time ingestion of the M5 CSVs into the raw zone
 # MGMT 599 Group 5
 # ============================================================================
 # Use the CLI, not the browser console: sell_prices.csv is ~200 MB and browser
@@ -25,7 +25,7 @@ else
     --create-bucket-configuration LocationConstraint="$REGION" 2>/dev/null || true
 fi
 
-# Block public access — good practice and a governance point for the report
+# Block public access. Good practice and a governance point for the report
 aws s3api put-public-access-block --bucket "$BUCKET" \
   --public-access-block-configuration \
   "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true"

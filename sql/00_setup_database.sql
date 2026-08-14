@@ -1,6 +1,6 @@
 -- ============================================================================
 -- 00_setup_database.sql
--- MGMT 599 Group 5 — one-time Athena setup
+-- MGMT 599 Group 5, one-time Athena setup
 -- ============================================================================
 -- Run these in order the first time you open Athena.
 --
@@ -21,7 +21,7 @@ COMMENT 'MGMT599 Group 5 - Walmart M5 demand forecasting';
 --   Target DB   : m5_db
 --   Table name  : sales_long
 -- The crawler should detect state_id as a PARTITION key, not a regular column.
--- If it lands as a regular column, the partitioning did not work — go back and
+-- If it lands as a regular column, the partitioning did not work. Go back and
 -- check the Glue job's partitionBy.
 -- ----------------------------------------------------------------------------
 

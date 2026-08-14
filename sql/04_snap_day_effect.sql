@@ -1,12 +1,12 @@
 -- ============================================================================
 -- 04_snap_day_effect.sql
--- Q3 — Do SNAP benefit days lift demand? (Strongest business-relevant finding
+-- Q3: Do SNAP benefit days lift demand? (Strongest business-relevant finding
 --      in this dataset, and a genuine forecasting feature.)
 -- ============================================================================
 -- Background worth putting in the report: SNAP (food assistance) benefits are
 -- distributed on fixed days of the month, and the distribution schedule differs
 -- by state. If SNAP days lift food sales, an inventory manager can anticipate
--- those spikes rather than react to them — which is exactly the kind of
+-- those spikes rather than react to them, which is exactly the kind of
 -- decision our stakeholder makes.
 -- ============================================================================
 

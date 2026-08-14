@@ -36,7 +36,7 @@ TBLPROPERTIES ('parquet.compression' = 'SNAPPY');
 
 
 -- ---------------------------------------------------------------------------
--- Model scorecard — the numbers that go in the report and on a slide
+-- Model scorecard: the numbers that go in the report and on a slide
 -- ---------------------------------------------------------------------------
 SELECT
     model_name,
