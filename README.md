@@ -206,19 +206,21 @@ stockout costs more than the equivalent excess inventory.
 
 ## Cost and cleanup
 
-Total project cost: under $10.
+Total project cost: under $10, tracked against a budget alert set before any
+resource was created.
 
-- $10 AWS budget alert set before any resource was created
-- Parquet + Snappy compression, cutting Athena scan volume by roughly 90%
+- $10 AWS budget alert with an 80% threshold, configured before the first upload
+- Parquet with Snappy compression, cutting Athena scan volume by roughly 90%
 - Partitioning so state-filtered queries skip roughly two thirds of the data
-- Curated aggregates so the dashboard never touches the fact table
-- Notebook run locally rather than on a billed SageMaker instance
+- Curated aggregates so the dashboard queries 135,870 rows rather than 59.2M
+- Athena query results written to a dedicated zone rather than a default location
+- SageMaker notebook instance stopped when not in use
 
 Athena is not the cost risk here, since compression keeps scanned volume
-trivial. The
-real risks are idle resources: a forgotten notebook instance and an uncancelled
-QuickSight subscription. Teardown removes the Glue job and crawler, empties the
-S3 zones, and cancels QuickSight.
+trivial. The real risks are idle resources: a running notebook instance and an
+uncancelled dashboard subscription, both of which bill whether or not anyone is
+using them. `docs/TEARDOWN.md` lists every resource this project created and the
+order to remove them in.
 
 ## Generative AI use
 
